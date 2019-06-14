@@ -50,28 +50,25 @@ class HttpStatus(Enum):
     I_AM_A_TEAPOT = (418, "I'm a teapot")
     UNPROCESSABLE_ENTITY = (422, "Unprocessable entity")
     LOCKED = (423, "Locked")
-    FAILED_DEPENDENCY = (424
-    UPGRADE_REQUIRED = 426
-    PRECONDITION_REQUIRED = 428
-    TOO_MANY_REQUESTS = 429
-    REQUEST_HEADER_FIELDS_TOO_LARGE = 431
-    UNAVAILABLE_FOR_LEGAL_REASONS = 451
+    FAILED_DEPENDENCY = (424, "Failed Dependency")
+    UPGRADE_REQUIRED = (426, "Upgrade Required")
+    PRECONDITION_REQUIRED = (428, "Precondition Required")
+    TOO_MANY_REQUESTS = (429, "Too Many Requests")
+    REQUEST_HEADER_FIELDS_TOO_LARGE = (431, "Request Header Fields Too Large")
+    UNAVAILABLE_FOR_LEGAL_REASONS = (451, "Unavailable For Legal Reasons")
 
-    INTERNAL_SERVER_ERROR = 500
-    NOT_IMPLEMENTED = 501
-    BAD_GATEWAY = 502
-    SERVICE_UNAVAILABLE = 503
-    GATEWAY_TIMEOUT = 504
-    HTTP_VERSION_NOT_SUPPORTED = 505
-    VARIANT_ALSO_NEGOTIATES = 506
-    INSUFFICIENT_STORAGE = 507
-    LOOP_DETECTED = 508
-    BANDWIDTH_LIMIT_EXCEEDED = 509
-    NOT_EXTENDED = 510
-    NETWORK_AUTHENTICATION_REQUIRED = 511
-
-    _value = None
-    _reason_phrase = None
+    INTERNAL_SERVER_ERROR = (500, "Internal Server Error")
+    NOT_IMPLEMENTED = (501, "Not Implemented")
+    BAD_GATEWAY = (502, "Bad Gateway")
+    SERVICE_UNAVAILABLE = (503, "Service Unavailable")
+    GATEWAY_TIMEOUT = (504, "Gateway Timeout")
+    HTTP_VERSION_NOT_SUPPORTED = (505, "HTTP Version Not Supported")
+    VARIANT_ALSO_NEGOTIATES = (506, "Variant Also Negotiates")
+    INSUFFICIENT_STORAGE = (507, "Insufficient Storage")
+    LOOP_DETECTED = (508, "Loop Detected")
+    BANDWIDTH_LIMIT_EXCEEDED = (509, "Bandwidth Limit Exceeded")
+    NOT_EXTENDED = (510, "Not Extended")
+    NETWORK_AUTHENTICATION_REQUIRED = (511, "Network Authentication Required")
 
     def __init__(self, value: int, reason_phrase: string):
         self._value = value
@@ -83,42 +80,82 @@ class HttpStatus(Enum):
     def get_reason_phrase(self):
         return self._reason_phrase
 
-    class Series(Enum):
-        INFORMATIONAL = 1
-        SUCCESSFUL = 2
-        REDIRECTION = 3
-        CLIENT_ERROR = 4
-        SERVER_ERROR = 5
+    def series(self):
+        return self.Series.value_of(self)
 
-        _value = None
+    def is_1xx_informational(self):
+        return self.series() == self.Series.INFORMATIONAL
 
-        def __init__(self, value: int):
-            self._value = value
+    def is_2xx_successful(self):
+        return self.series() == self.Series.SUCCESSFUL
 
-        def get_value(self):
-            return self._value
+    def is_3xx_redirection(self):
+        return self.series() == self.Series.REDIRECTION
 
-        @classmethod
-        def value_of(cls, http_status):
-            """
-            Return the enum constant of this type with the corresponding series.
-            :parameter: status a standard HTTP status enum value
-            :return: the enum constant of this type with the corresponding series
-            :raises: ValueError if this enum has no corresponding constant
-            """
-            return cls.value_of(http_status.value)
+    def is_4xx_client_error(self):
+        return self.series() == self.Series.CLIENT_ERROR
 
-        @classmethod
-        def value_of(cls, status_code: int):
-            series = cls.resolve(status_code)
-            if not series:
-                raise ValueError(f"No matching constant for [{status_code}]")
-            return series
+    def is_5xx_server_error(self):
+        return self.series() == self.Series.SERVER_ERROR
 
-        @classmethod
-        def resolve(cls, status_code: int):
-            series_code = status_code / 100;
-            for series in cls:
-                if series.value == series_code:
-                    return series
-            return None
+    def is_error(self):
+        return self.is_4xx_client_error() or self.is_5xx_server_error()
+
+    def __str__(self):
+        # TODO: Should this be super?
+        return self.value() + " " + self.name()
+
+    @classmethod
+    def value_of(cls, status_code: int):
+        status = cls.resolve(status_code)
+        if not status:
+            raise ValueError(f"No matching constant for {status_code}")
+        return status
+
+
+    @classmethod
+    def resolve(cls, status_code: int):
+        for status in list(cls):
+            if status.value == status_code:
+                return status
+        return None
+
+class Series(Enum):
+    INFORMATIONAL = 1
+    SUCCESSFUL = 2
+    REDIRECTION = 3
+    CLIENT_ERROR = 4
+    SERVER_ERROR = 5
+
+    _value = None
+
+    def __init__(self, value: int):
+        self._value = value
+
+    def get_value(self):
+        return self._value
+
+    @classmethod
+    def value_of(cls, http_status):
+        """
+        Return the enum constant of this type with the corresponding series.
+        :parameter: status a standard HTTP status enum value
+        :return: the enum constant of this type with the corresponding series
+        :raises: ValueError if this enum has no corresponding constant
+        """
+        return cls.value_of(http_status.value)
+
+    @classmethod
+    def value_of(cls, status_code: int):
+        series = cls.resolve(status_code)
+        if not series:
+            raise ValueError(f"No matching constant for [{status_code}]")
+        return series
+
+    @classmethod
+    def resolve(cls, status_code: int):
+        series_code = status_code / 100;
+        for series in cls:
+            if series.value == series_code:
+                return series
+        return None
