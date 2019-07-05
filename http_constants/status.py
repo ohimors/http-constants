@@ -2,8 +2,47 @@ import string
 from enum import Enum
 
 
+class Series(Enum):
+    INFORMATIONAL = 1
+    SUCCESSFUL = 2
+    REDIRECTION = 3
+    CLIENT_ERROR = 4
+    SERVER_ERROR = 5
+
+    def __init__(self, value: int):
+        self._value = value
+
+    def get_value(self):
+        return self._value
+
+    @classmethod
+    def value_of(cls, http_status):
+        """
+        Return the enum constant of this type with the corresponding series.
+        :parameter: status a standard HTTP status enum value
+        :return: the enum constant of this type with the corresponding series
+        :raises: ValueError if this enum has no corresponding constant
+        """
+        return cls.value_of(http_status.value)
+
+    @classmethod
+    def value_of(cls, status_code: int):
+        series = cls.resolve(status_code)
+        if not series:
+            raise ValueError(f"No matching constant for [{status_code}]")
+        return series
+
+    @classmethod
+    def resolve(cls, status_code: int):
+        series_code = int(status_code / 100);
+        for series in cls:
+            if series.value == series_code:
+                return series
+        return None
+
+
 class HttpStatus(Enum):
-    _ignore_ = ['Category']
+    _ignore_ = ['Series']
 
     CONTINUE = (100, "Continue")
     SWITCHING_PROTOCOLS = (101, "Switching Protocols")
@@ -83,7 +122,7 @@ class HttpStatus(Enum):
         return self._reason_phrase
 
     def series(self):
-        return self.Series.value_of(self)
+        return Series.value_of(self.get_value())
 
     def is_1xx_informational(self):
         return self.series() == self.Series.INFORMATIONAL
@@ -113,48 +152,9 @@ class HttpStatus(Enum):
             raise ValueError(f"No matching constant for {status_code}")
         return status
 
-
     @classmethod
     def resolve(cls, status_code: int):
         for status in list(cls):
             if status.value == status_code:
                 return status
-        return None
-
-class Series(Enum):
-    INFORMATIONAL = 1
-    SUCCESSFUL = 2
-    REDIRECTION = 3
-    CLIENT_ERROR = 4
-    SERVER_ERROR = 5
-
-    def __init__(self, value: int):
-        self._value = value
-
-    def get_value(self):
-        return self._value
-
-    @classmethod
-    def value_of(cls, http_status):
-        """
-        Return the enum constant of this type with the corresponding series.
-        :parameter: status a standard HTTP status enum value
-        :return: the enum constant of this type with the corresponding series
-        :raises: ValueError if this enum has no corresponding constant
-        """
-        return cls.value_of(http_status.value)
-
-    @classmethod
-    def value_of(cls, status_code: int):
-        series = cls.resolve(status_code)
-        if not series:
-            raise ValueError(f"No matching constant for [{status_code}]")
-        return series
-
-    @classmethod
-    def resolve(cls, status_code: int):
-        series_code = status_code / 100;
-        for series in cls:
-            if series.value == series_code:
-                return series
         return None
