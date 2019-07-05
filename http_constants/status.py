@@ -3,6 +3,8 @@ from enum import Enum
 
 
 class HttpStatus(Enum):
+    _ignore_ = ['Category']
+
     CONTINUE = (100, "Continue")
     SWITCHING_PROTOCOLS = (101, "Switching Protocols")
     PROCESSING = (102, "Processing")
@@ -102,8 +104,7 @@ class HttpStatus(Enum):
         return self.is_4xx_client_error() or self.is_5xx_server_error()
 
     def __str__(self):
-        # TODO: Should this be super?
-        return self.value() + " " + self.name()
+        return str(self.value) + " " + self.name
 
     @classmethod
     def value_of(cls, status_code: int):
@@ -126,8 +127,6 @@ class Series(Enum):
     REDIRECTION = 3
     CLIENT_ERROR = 4
     SERVER_ERROR = 5
-
-    _value = None
 
     def __init__(self, value: int):
         self._value = value
