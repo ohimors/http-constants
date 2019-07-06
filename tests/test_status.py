@@ -2,6 +2,7 @@ import random
 from unittest import TestCase
 
 from http_constants.status import HttpStatus
+from utils.datastructures import MultiValueDict
 
 
 class TestHttpStatus(TestCase):
@@ -48,3 +49,7 @@ class TestHttpStatus(TestCase):
         status_from_value = HttpStatus.value_of(status.get_value())
         self.assertEqual(status_from_value, status)
 
+    def test_datastructure(self):
+        # TODO: Move this to separate test file
+        d = MultiValueDict({'name': ['Adrian', 'Simon'], 'position': ['Developer']})
+        print(d.getlist('name'))
