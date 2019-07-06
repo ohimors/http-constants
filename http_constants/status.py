@@ -27,6 +27,10 @@ class Series(Enum):
 
     @classmethod
     def value_of(cls, status_code: int):
+        """
+        Return the corresponding series enum of this status_code.
+        :param status_code:
+        """
         series = cls.resolve(status_code)
         if not series:
             raise ValueError(f"No matching constant for [{status_code}]")
@@ -34,6 +38,11 @@ class Series(Enum):
 
     @classmethod
     def resolve(cls, status_code: int):
+        """
+        Resolve the given status code to the corresponding series enum
+        :param status_code:
+        :return:
+        """
         series_code = int(status_code / 100);
         for series in cls:
             if series.value == series_code:
@@ -116,28 +125,37 @@ class HttpStatus(Enum):
         self._reason_phrase = reason_phrase
 
     def get_value(self):
+        """
+        Return the integer value of this status code.
+        """
         return self._value
 
     def get_reason_phrase(self):
+        """
+        Return the reason phrase of this status code.
+        """
         return self._reason_phrase
 
     def series(self):
+        """
+        Return the HTTP status series of this status code.
+        """
         return Series.value_of(self.get_value())
 
     def is_1xx_informational(self):
-        return self.series() == self.Series.INFORMATIONAL
+        return self.series() == Series.INFORMATIONAL
 
     def is_2xx_successful(self):
-        return self.series() == self.Series.SUCCESSFUL
+        return self.series() == Series.SUCCESSFUL
 
     def is_3xx_redirection(self):
-        return self.series() == self.Series.REDIRECTION
+        return self.series() == Series.REDIRECTION
 
     def is_4xx_client_error(self):
-        return self.series() == self.Series.CLIENT_ERROR
+        return self.series() == Series.CLIENT_ERROR
 
     def is_5xx_server_error(self):
-        return self.series() == self.Series.SERVER_ERROR
+        return self.series() == Series.SERVER_ERROR
 
     def is_error(self):
         return self.is_4xx_client_error() or self.is_5xx_server_error()
@@ -147,6 +165,11 @@ class HttpStatus(Enum):
 
     @classmethod
     def value_of(cls, status_code: int):
+        """
+        Return the enum constant of this type with the specified numeric value.
+        :param status_code:
+        :return: status
+        """
         status = cls.resolve(status_code)
         if not status:
             raise ValueError(f"No matching constant for {status_code}")
@@ -154,7 +177,11 @@ class HttpStatus(Enum):
 
     @classmethod
     def resolve(cls, status_code: int):
+        """
+        Resolve the given status code to an {@code HttpStatus}, if possible.
+        :param status_code:
+        """
         for status in list(cls):
-            if status.value == status_code:
+            if status.get_value() == status_code:
                 return status
         return None
