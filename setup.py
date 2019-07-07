@@ -13,8 +13,8 @@ with open(os.path.join(HERE, "README.md")) as fid:
 # This call to setup() does all the work
 setup(
     name="http-constants",
-    version="1.0.0",
-    description="A set of common http enumerations and constants.",
+    version="0.1.0",
+    description="The set of standard http constants for headers and statuses",
     long_description=README,
     long_description_content_type="text/markdown",
     url="https://github.com/ohimors/http-constants",
