@@ -17,8 +17,8 @@ DESCRIPTION = 'The set of standard http constants for headers and statuses'
 URL = 'https://github.com/ohimors/http-constants'
 EMAIL = 'stephen.ohimor@gmail.com'
 AUTHOR = 'Stephen Ohimor'
-REQUIRES_PYTHON = '>=3.7.0'
-VERSION = '0.2.0'
+REQUIRES_PYTHON = '>=3.6.0'
+VERSION = '0.4.0'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
@@ -103,9 +103,9 @@ setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
-    # packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
+    packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
     # If your package is a single module, use this instead of 'packages':
-    py_modules=['http_constants'],
+    # py_modules=['http_constants'],
 
     # entry_points={
     #     'console_scripts': ['mycli=mymodule:cli'],
