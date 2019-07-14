@@ -17,8 +17,8 @@ DESCRIPTION = 'The set of standard http constants for headers and statuses'
 URL = 'https://github.com/ohimors/http-constants'
 EMAIL = 'stephen.ohimor@gmail.com'
 AUTHOR = 'Stephen Ohimor'
-REQUIRES_PYTHON = '>=3.6.0'
-VERSION = '0.1.0'
+REQUIRES_PYTHON = '>=3.7.0'
+VERSION = '0.2.0'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
