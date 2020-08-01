@@ -1,56 +1,26 @@
-import string
-from enum import Enum
+import warnings
+from enum import Enum, IntEnum
+from typing import Optional
 
 
-class Series(Enum):
+class Series(IntEnum):
     INFORMATIONAL = 1
     SUCCESSFUL = 2
     REDIRECTION = 3
     CLIENT_ERROR = 4
     SERVER_ERROR = 5
 
-    def __init__(self, value: int):
-        self._value = value
-
-    def get_value(self):
-        return self._value
-
     @classmethod
-    def value_of(cls, http_status):
-        """
-        Return the enum constant of this type with the corresponding series.
-        :parameter: status a standard HTTP status enum value
-        :return: the enum constant of this type with the corresponding series
-        :raises: ValueError if this enum has no corresponding constant
-        """
-        return cls.value_of(http_status.value)
-
-    @classmethod
-    def value_of(cls, status_code: int):
+    def from_status_code(cls, status_code: int) -> 'Series':
         """
         Return the corresponding series enum of this status_code.
         :param status_code:
         """
-        series = cls.resolve(status_code)
-        if not series:
-            raise ValueError(f"No matching constant for [{status_code}]")
-        return series
-
-    @classmethod
-    def resolve(cls, status_code: int):
-        """
-        Resolve the given status code to the corresponding series enum
-        :param status_code:
-        :return:
-        """
-        series_code = int(status_code / 100);
-        for series in cls:
-            if series.value == series_code:
-                return series
-        return None
+        series_code = int(status_code / 100)
+        return cls(series_code)
 
 
-class HttpStatus(Enum):
+class HttpStatus(int, Enum):
     _ignore_ = ['Series']
 
     CONTINUE = (100, "Continue")
@@ -120,27 +90,31 @@ class HttpStatus(Enum):
     NOT_EXTENDED = (510, "Not Extended")
     NETWORK_AUTHENTICATION_REQUIRED = (511, "Network Authentication Required")
 
-    def __init__(self, value: int, reason_phrase: string):
-        self._value = value
-        self._reason_phrase = reason_phrase
+    def __new__(cls, value: int, reason_phrase: str):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj.reason_phrase = reason_phrase
+        return obj
 
-    def get_value(self):
+    def get_value(self) -> int:
         """
         Return the integer value of this status code.
         """
-        return self._value
+        warnings.warn('Use int(this_enum), or this_enum.value instead', DeprecationWarning)
+        return self.value
 
-    def get_reason_phrase(self):
+    def get_reason_phrase(self) -> str:
         """
         Return the reason phrase of this status code.
         """
-        return self._reason_phrase
+        warnings.warn('Use this_enum.reason_phrase instead', DeprecationWarning)
+        return self.reason_phrase
 
-    def series(self):
+    def series(self) -> Series:
         """
         Return the HTTP status series of this status code.
         """
-        return Series.value_of(self.get_value())
+        return Series.from_status_code(self.value)
 
     def is_1xx_informational(self):
         return self.series() == Series.INFORMATIONAL
@@ -161,27 +135,26 @@ class HttpStatus(Enum):
         return self.is_4xx_client_error() or self.is_5xx_server_error()
 
     def __str__(self):
-        return str(self.value) + " " + self.name
+        return '{} {}'.format(self.value, self.name)
 
     @classmethod
-    def value_of(cls, status_code: int):
+    def value_of(cls, status_code: int) -> 'HttpStatus':
         """
         Return the enum constant of this type with the specified numeric value.
         :param status_code:
-        :return: status
+        :return: HttpStatus
         """
-        status = cls.resolve(status_code)
-        if not status:
-            raise ValueError(f"No matching constant for {status_code}")
-        return status
+        warnings.warn("Use HttpStatus(status_code) instead", DeprecationWarning)
+        return cls(status_code)
 
     @classmethod
-    def resolve(cls, status_code: int):
+    def resolve(cls, status_code: int) -> Optional['HttpStatus']:
         """
         Resolve the given status code to an {@code HttpStatus}, if possible.
         :param status_code:
         """
-        for status in list(cls):
-            if status.get_value() == status_code:
-                return status
-        return None
+        warnings.warn("Use HttpStatus(status_code) and catch ValueError instead", DeprecationWarning)
+        try:
+            return cls(status_code)
+        except ValueError:
+            return None
