@@ -17,6 +17,7 @@ class HttpHeaders:
     ACCESS_CONTROL_REQUEST_METHOD = "Access-Control-Request-Method"
     AGE = "Age"
     ALLOW = "Allow"
+    AUTHENTICATION = "Authentication"
     AUTHORIZATION = "Authorization"
     CACHE_CONTROL = "Cache-Control"
     CONNECTION = "Connection"
