@@ -1,0 +1,28 @@
+repo_name: ohimors/http-constants
+report_id: dc76fe37c8ae5b9f2bd753966e0623e3
+repo_type: Public
+timestamp: '2023-11-13T00:24:34+00:00'
+requested_by: ohimors
+provider: github
+branch: master
+detected_tools_count: 2
+tools:
+- name: Python
+  description: A clear and powerful object-oriented programming language, comparable
+    to Perl, Ruby, Scheme, or Java.
+  website_url: https://www.python.org
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/993/pUBY5pVj.png
+  detection_source: Repo Metadata
+- name: Git
+  description: Fast, scalable, distributed revision control system
+  website_url: http://git-scm.com/
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Version Control System
+  image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source: Repo Metadata
