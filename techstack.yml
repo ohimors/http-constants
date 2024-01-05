@@ -1,7 +1,8 @@
 repo_name: ohimors/http-constants
 report_id: dc76fe37c8ae5b9f2bd753966e0623e3
+version: 0.1
 repo_type: Public
-timestamp: '2023-11-13T00:24:34+00:00'
+timestamp: '2024-01-05T08:47:25+00:00'
 requested_by: ohimors
 provider: github
 branch: master
@@ -16,6 +17,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/993/pUBY5pVj.png
+  detection_source_url: https://github.com/ohimors/http-constants
   detection_source: Repo Metadata
 - name: Git
   description: Fast, scalable, distributed revision control system
@@ -25,4 +27,5 @@ tools:
   category: Build, Test, Deploy
   sub_category: Version Control System
   image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source_url: https://github.com/ohimors/http-constants
   detection_source: Repo Metadata
